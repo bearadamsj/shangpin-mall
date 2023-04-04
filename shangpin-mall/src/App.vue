@@ -2,7 +2,6 @@
   <div id="app">
     <Header></Header>
     <router-view></router-view>
-    <h1>welcome to first vue project</h1>
     <Footer v-show="$route.meta.showFooter"></Footer>
   </div>
 </template>
