@@ -1,8 +1,10 @@
-<template></template>
+<template>
+    <typeNav/>
+</template>
 
 <script>
 export default {
-
+    name: 'Search'
 }
 </script>
 

@@ -7,16 +7,20 @@
 </template>
 
 <script>
-
-import Header from "./components/Header"
-import Footer from "./components/Footer"
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    Header, Footer
-  }
-}
+    Header,
+    Footer,
+  },
+  mounted() {
+    this.$store.dispatch("categoryList");
+  },
+};
 </script>
  
-<style></style>
+<style>
+</style>

@@ -43,6 +43,7 @@
 </template>
 
 <script>
+
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
     name: "Header",
@@ -53,15 +54,18 @@ export default {
     },
     methods: {
         goSearch() {
-            this.$router.push({
-                name: "search",
-                params: {
-                    keyword: this.keyword
-                },
-                query: {
-                    k: this.keyword.toUpperCase()
-                }
-            })
+
+            // this.$router.push({
+            //     name: "search",
+            //     params: {
+            //         keyword: this.keyword
+            //     },
+            //     query: {
+            //         k: this.keyword.toUpperCase()
+            //     }
+            // })
+            this.$router.push({path:'/search'})
+            console.log('123')
         }
     },
 }

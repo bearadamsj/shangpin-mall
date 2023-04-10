@@ -12,9 +12,10 @@ let originalReplace = VueRouter.prototype.replace
 // rewrite the push method
 VueRouter.prototype.push = function (path, resolve, reject) {
     if (resolve && reject) {
-        originalPush.call(this, location, resolve, reject)
+        originalPush.call(this, path, resolve, reject)
+
     } else {
-        originalPush.call(this, localStorage, () => { }, () => { })
+        originalPush.call(this, path, () => { }, () => { })
     }
 
 }
@@ -22,18 +23,21 @@ VueRouter.prototype.push = function (path, resolve, reject) {
 // rewrite the replace method 
 VueRouter.prototype.replace = function (path, resolve, reject) {
     if (resolve && reject) {
-        originalReplace.call(this, location, resolve, reject)
+        originalReplace.call(this, path, resolve, reject)
     } else {
-        originalReplace.call(this, location, () => { }, () => { })
+        originalReplace.call(this, path, () => { }, () => { })
     }
 
 }
+
+
 export default new VueRouter({
     routes: [
         {
             path: "/home",
             component: Home,
-            meta: { showFooter: true }
+            meta: { showFooter: true },
+            name: "home",
         },
         {
             path: "/search/:keyword?",

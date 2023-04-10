@@ -1,6 +1,6 @@
 import requests from "./request";
 
-function redCategoryList() {
+export const redCategoryList = () => {
     return requests({
         url: 'product/getBaseCategoryList',
         method: 'get'
