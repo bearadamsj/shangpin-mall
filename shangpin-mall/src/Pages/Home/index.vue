@@ -6,7 +6,8 @@
         <todayRecommand></todayRecommand>
         <rankVue></rankVue>
         <likeVue></likeVue>
-        <floorVue></floorVue>
+        <floorVue v-for="(floor, index) in floorlist" :key="floor.id"
+        :list="floor"></floorVue>
         <brandVue></brandVue>
     </div>
 </template>
@@ -21,8 +22,8 @@ import floorVue from '@/Pages/Home/Floor'
 import brandVue from '@/Pages/Home/Brand'
 
 // axios requests
-import redCategoryList from '@/API';
-redCategoryList()
+
+import { mapState } from 'vuex'
 export default {
     components: {
         listContainer,
@@ -31,7 +32,24 @@ export default {
         likeVue,
         floorVue,
         brandVue,
+    },
+
+    data(){
+        return {
+        }
+    },
+
+    mounted(){
+        this.$store.dispatch('getFloorList')
+        
+    },
+
+    computed: {
+        ...mapState({
+            floorlist: (state) => state.home.floorlist
+        })
     }
+
 }
 </script>
 
