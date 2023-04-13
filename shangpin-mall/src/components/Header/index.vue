@@ -83,6 +83,12 @@ export default {
       this.$router.push(location);
     },
   },
+
+  mounted(){
+    this.$bus.$on('clearKeyord',() => {
+      this.keyword = ''
+    })
+  }
 };
 </script>
 

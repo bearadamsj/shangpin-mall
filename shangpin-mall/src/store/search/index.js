@@ -12,7 +12,6 @@ const mutations = {
 const actions = {
     async reqSearchData({commit}, params={}){
         let result = await reqSearchData(params)
-        console.log(result)
         if(result.code == '200'){
             commit('GETSEARCHDATA', result.data)
         }
@@ -22,14 +21,14 @@ const actions = {
 
 const getters = {
     goodsList(state){
-        return state.searchData.goodsList
+        return state.searchData.goodsList||[]
     },
     trademarkList(state){
-        return state.searchData.trademarkList
+        return state.searchData.trademarkList||[]
     },
 
     attrsList(state){
-        return state.searchData.attrsList
+        return state.searchData.attrsList||[]
     }
 
 }
