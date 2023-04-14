@@ -86,7 +86,7 @@ export default {
 
   mounted(){
     this.$bus.$on('clearKeyord',() => {
-      this.keyword = ''
+      this.keyword = '';
     })
   }
 };
