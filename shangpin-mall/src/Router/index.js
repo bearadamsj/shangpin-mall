@@ -6,6 +6,7 @@ import Home from '@/Pages/Home'
 import Search from '@/Pages/Search'
 import Login from '@/Pages/Login'
 import Register from '@/Pages/Register'
+import Detail from '@/Pages/Detail'
 let originalPush = VueRouter.prototype.push
 let originalReplace = VueRouter.prototype.replace
 
@@ -58,6 +59,11 @@ export default new VueRouter({
             redirect: "/home",
             meta: { showFooter: true }
 
+        },
+        {
+            path: "/detail/:kuid?",
+            component: Detail,
+            name: "detail",
         }
     ]
 })

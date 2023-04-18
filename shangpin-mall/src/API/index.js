@@ -28,3 +28,18 @@ export const reqSearchData = (params) => {
         data: params
     })
 }
+
+export const reqGoodsInfo = (skuid) => {
+    return requests({
+        url: `item/${skuid}`,
+        method: 'get',
+
+    })
+}
+// api to add item into cart or update item count
+export const addItemCart = (skuId, skuNum) => {
+    return requests({
+        url: `cart/addToCart/${skuId}/${skuNum}`,
+        methods: 'post',
+    })
+}

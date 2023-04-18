@@ -79,8 +79,8 @@
                       class="fas"
                       :class="{
                         'fa-arrow-down':
-                          searchParams.props.indexOf('desc') != -1,
-                        'fa-arrow-up': searchParams.props.indexOf('asc') != -1,
+                          searchParams.order.indexOf('desc') != -1,
+                        'fa-arrow-up': searchParams.order.indexOf('asc') != -1,
                       }"
                     ></i
                   ></a>
@@ -97,9 +97,9 @@
               >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
-                      ><img :src="good.defaultImg"
-                    /></a>
+                    <router-link :to="`/detail/${good.id}`">
+                    <img :src="good.defaultImg"
+                    /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -133,43 +133,19 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <!-- original -->
         </div>
+
+        <!-- pagination -->
+
+        <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :total="total" :continues="5" @setPageInfo="setPageInfo"/> 
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import SearchSelector from "./SearchSelector/SearchSelector";
 
 export default {
@@ -265,9 +241,15 @@ export default {
         order = `${OrderBy}:desc`
       };
       this.searchParams.order = order
-      console.log(this.searchParams.order)
+      this.getData()
 
     },
+    
+    setPageInfo(pageNo){
+      this.searchParams.pageNo = pageNo
+      console.log(pageNo)
+      this.getData()
+    }
 
   },
 
@@ -283,6 +265,11 @@ export default {
 
   computed: {
     ...mapGetters(["goodsList"]),
+    ...mapState({
+      total : (state) => {
+        return state.search.searchData.total
+      }
+    })
   },
 
   watch: {
