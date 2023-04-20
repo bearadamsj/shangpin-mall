@@ -1,7 +1,9 @@
-import { reqGoodsInfo, addItemCart } from "@/API"
+import { reqGoodsInfo, addItemCart } from "@/API";
+import { getUUID } from "@/utils/user_token";
 
 const state = {
-    goodsinfo: {}
+    goodsinfo: {},
+    user_token: getUUID(),
 }
 const actions = {
     async getGoodsInfo({ commit }, skuid) {
@@ -13,9 +15,11 @@ const actions = {
 
     async addItemCartAction({ commit }, { skuId, skuNum }) {
         let result = await addItemCart(skuId, skuNum)
-        console.log(result)
-        if (result.code == 200) {
-            console.log(result)
+
+        if (result.code >= 200 ||result.code <=300) {
+            return 'ok'
+        }else{
+            return Promise.reject(new Error('failure'))
         }
     }
 }

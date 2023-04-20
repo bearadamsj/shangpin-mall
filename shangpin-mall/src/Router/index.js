@@ -7,6 +7,8 @@ import Search from '@/Pages/Search'
 import Login from '@/Pages/Login'
 import Register from '@/Pages/Register'
 import Detail from '@/Pages/Detail'
+import AddCartSuccess from '@/Pages/AddCartSuccess'
+import ShopCart from '@/Pages/ShopCart'
 let originalPush = VueRouter.prototype.push
 let originalReplace = VueRouter.prototype.replace
 
@@ -64,6 +66,18 @@ export default new VueRouter({
             path: "/detail/:kuid?",
             component: Detail,
             name: "detail",
-        }
+        },
+        {
+            path: "/addcartsuccess",
+            component: AddCartSuccess,
+            meta: {showFooter: true},
+            name: 'addcartsuccess',
+        },
+        {
+            path: "/shopcart",
+            component: ShopCart,
+            meta: { showFooter: true },
+            name: "shopcart",
+        },
     ]
 })

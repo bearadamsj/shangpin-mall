@@ -21,7 +21,6 @@ export default {
 
   computed: {
     imageObj() {
-      console.log(this.skuImageList[this.currentIndex])
       return this.skuImageList[this.currentIndex] || {};
     },
   },
@@ -38,7 +37,7 @@ export default {
       let mask = this.$refs.mask;
       let left = event.offsetX - mask.offsetWidth/2;
       let top = event.offsetY - mask.offsetHeight/2;
-      if(left<=0) left=0;
+      if(left<=0) left = 0;
       if(left>=mask.offsetWidth) left=mask.offsetWidth
       if(top<=0) top = 0;
       if(top>=mask.offsetHeight) top = mask.offsetHeight

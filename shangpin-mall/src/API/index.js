@@ -43,3 +43,10 @@ export const addItemCart = (skuId, skuNum) => {
         methods: 'post',
     })
 }
+// api getting items in shopping cart
+export const reqShoppingCart = () => {
+    return requests({
+        url: 'cart/cartList',
+        methods: 'get'
+    })
+}

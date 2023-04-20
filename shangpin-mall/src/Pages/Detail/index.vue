@@ -89,7 +89,12 @@
                     salesValueList, index
                   ) in salesAttr.spuSaleAttrValueList"
                   :key="salesValueList.id"
-                  @click="changeAttrValue(salesValueList, salesAttr.spuSaleAttrValueList)"
+                  @click="
+                    changeAttrValue(
+                      salesValueList,
+                      salesAttr.spuSaleAttrValueList
+                    )
+                  "
                 >
                   {{ salesValueList.saleAttrValueName }}
                 </dd>
@@ -97,9 +102,19 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" v-model="skuNum" @change="changeSkuNum"/>
+                <input
+                  autocomplete="off"
+                  class="itxt"
+                  v-model="skuNum"
+                  @change="changeSkuNum"
+                />
                 <a href="javascript:" class="plus" @click="skuNum++">+</a>
-                <a href="javascript:" class="mins" @click="skuNum>1?skuNum--:skuNum=1">-</a>
+                <a
+                  href="javascript:"
+                  class="mins"
+                  @click="skuNum > 1 ? skuNum-- : (skuNum = 1)"
+                  >-</a
+                >
               </div>
               <div class="add">
                 <a href="javascript:" @click="addToCart">加入购物车</a>
@@ -358,10 +373,10 @@ export default {
     this.$store.dispatch("getGoodsInfo", this.$route.params.kuid);
   },
 
-  data(){
-    return{
-      skuNum: 1
-    }
+  data() {
+    return {
+      skuNum: 1,
+    };
   },
 
   computed: {
@@ -371,25 +386,34 @@ export default {
     },
   },
   methods: {
-    changeAttrValue(attrValue, attrValueList){
-      attrValueList.forEach(attr => {
+    changeAttrValue(attrValue, attrValueList) {
+      attrValueList.forEach((attr) => {
         attr.isChecked = 0;
       });
-      attrValue.isChecked = 1
+      attrValue.isChecked = 1;
     },
 
-    changeSkuNum(event){
-      let skuNumValue = event.target.value*1;
-      if(isNaN(skuNumValue) || skuNumValue<0){
-        this.skuNum = 1
-      }else{
-        this.skuNum = parseInt(skuNumValue)
+    changeSkuNum(event) {
+      let skuNumValue = event.target.value * 1;
+      if (isNaN(skuNumValue) || skuNumValue < 0) {
+        this.skuNum = 1;
+      } else {
+        this.skuNum = parseInt(skuNumValue);
       }
     },
 
-    addToCart(){
-      this.$store.dispatch('addItemCartAction', {skuId: this.$route.params.$kuid, skuNum: this.skuNum})
-    }
+    async addToCart() {
+      try {
+        await this.$store.dispatch("addItemCartAction", {
+          skuId: this.$route.params.$kuid,
+          skuNum: this.skuNum,
+        });
+        sessionStorage.setItem('skuInfo', JSON.stringify(this.skuInfo))
+        this.$router.push({name: 'addcartsuccess', query: {skuNum: this.skuNum}})
+      } catch (error) {
+        alert(error.message);
+      }
+    },
   },
 };
 </script>
