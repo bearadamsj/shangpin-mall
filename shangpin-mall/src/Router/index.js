@@ -3,12 +3,21 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 import Home from '@/Pages/Home'
-import Search from '@/Pages/Search'
+//change to lazy route
+// import Search from '@/Pages/Search'
 import Login from '@/Pages/Login'
 import Register from '@/Pages/Register'
 import Detail from '@/Pages/Detail'
 import AddCartSuccess from '@/Pages/AddCartSuccess'
 import ShopCart from '@/Pages/ShopCart'
+import store from '@/store'
+import Trade from '@/Pages/Trade'
+import Pay from '@/Pages/Pay'
+import PaySuccess from '@/Pages/PaySuccess'
+import Center from '@/Pages/Center'
+import myOrder from '@/Pages/Center/myOrder'
+import groupOrder from '@/Pages/Center/groupOrder'
+
 let originalPush = VueRouter.prototype.push
 let originalReplace = VueRouter.prototype.replace
 
@@ -34,7 +43,7 @@ VueRouter.prototype.replace = function (path, resolve, reject) {
 }
 
 
-export default new VueRouter({
+let router = new VueRouter({
     routes: [
         {
             path: "/home",
@@ -44,7 +53,7 @@ export default new VueRouter({
         },
         {
             path: "/search/:keyword?",
-            component: Search,
+            component: () => import('@/Pages/Search'),
             meta: { showFooter: true },
             name: "search",
         },
@@ -70,7 +79,7 @@ export default new VueRouter({
         {
             path: "/addcartsuccess",
             component: AddCartSuccess,
-            meta: {showFooter: true},
+            meta: { showFooter: true },
             name: 'addcartsuccess',
         },
         {
@@ -79,5 +88,95 @@ export default new VueRouter({
             meta: { showFooter: true },
             name: "shopcart",
         },
+        {
+            path: "/trade",
+            component: Trade,
+            meta: { showFooter: true },
+            name: "trade",
+            beforeEnter: (to, from, next) => {
+                if(from.path=='/shopcart'){
+                    next()
+                }else{
+                    next(false)
+                }
+            }
+        },
+        {
+            path: "/pay",
+            component: Pay,
+            meta: { showFooter: true },
+            name: "pay",
+            beforeEnter: (to, from, next) => {
+                if(from.path=='/trade'){
+                    next()
+                }else{
+                    next(false)
+                }
+            }
+        },
+        {
+            path: "/paysuccess",
+            component: PaySuccess,
+            meta: { showFooter: true },
+            name: "paysuccess",
+        },
+        {
+            path: "/center",
+            component: Center,
+            meta: { showFooter: true },
+            name: "center",
+            children: [
+                {
+                    path: "myOrder",
+                    component: myOrder,
+                },
+                {
+                    path: "groupOrder",
+                    component: groupOrder
+                },
+                {
+                    path: "/center",
+                    redirect: "/center/myOrder"
+                }
+            ]
+        },
     ]
 })
+
+router.beforeEach(async (to, from, next) => {
+
+    // next()
+    let token = store.state.user.token
+    //already logged in
+    if (token) {
+        if (to.path == '/login') {
+            next('/')
+        } else {
+
+            if (store.state.user.userinfo.name) {
+                next()
+            } else {
+                try {
+                    await store.dispatch('autoLoginAction')
+                    next()
+                } catch (error) {
+                    await store.dispatch('logoutAction')
+                    next('/login')
+                }
+
+            }
+        }
+
+    } else {
+        //not logged in 
+        let toPath = to.path
+        if(toPath.indexOf('/trade')!=-1 || toPath.indexOf('/pay')!=-1 || toPath.indexOf('/center')!=-1){
+            next('/login?redirect='+toPath)
+        }else{
+            next()
+        }
+        
+    }
+})
+
+export default router

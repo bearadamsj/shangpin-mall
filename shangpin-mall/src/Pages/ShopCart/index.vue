@@ -21,6 +21,7 @@
               type="checkbox"
               name="chk_list"
               :checked="cart.isChecked == 1"
+              @click="changeItemInCart(cart)"
             />
           </li>
           <li class="cart-list-con2">
@@ -59,7 +60,7 @@
             <span class="sum">{{ cart.skuPrice * cart.skuNum }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a class="sindelet" @click="deleteCart(cart)">删除</a>
             <br />
             <a href="#none">移到收藏</a>
           </li>
@@ -68,11 +69,11 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAllChecked" />
+        <input class="chooseAll" type="checkbox" :checked="isAllChecked" @click="updateAllChecked"/>
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a @click="deleteAllSelected">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -83,7 +84,7 @@
           <i class="summoney">{{ totalSum }}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <router-link class="sum-btn" to="/trade">结算</router-link>>
         </div>
       </div>
     </div>
@@ -92,6 +93,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import throttle from "lodash/throttle";
 export default {
   name: "ShopCart",
   mounted() {
@@ -120,7 +122,7 @@ export default {
       this.$store.dispatch("getShoppingCart");
     },
 
-    handle(changeType, valueDiff, cart) {
+    handle: throttle(async function(changeType, valueDiff, cart) {
       switch (changeType) {
         case "add":
           disValue = 1;
@@ -134,7 +136,44 @@ export default {
             disValue = parseInt(disValue) - cart.skuNum
           }
       }
+    }, 500),
+    async deleteCart(cart){
+      try {
+        await this.$store.dispatch('deleteCart', cart.skuId)
+        this.getData()
+      } catch(error) {
+        alert(error.message)
+      }
     },
+
+    async changeItemInCart(cart, event){
+      try{
+        await this.$store.dispatch('changeItemInCart', {skuId: cart.skuId, isChecked: event.target.checked?'1':'0'})
+      } catch(error){
+        alert(error.message)
+      }
+    },
+
+    async deleteAllSelected(){
+      try{
+        await this.$store.dispatch('deleteAllSelectedAction')
+        this.getData()
+      }catch(error){
+        alert(error.message)
+      }
+      
+    },
+
+    updateAllChecked(){
+      let isChecked = target.checked?'1':'0'
+
+      this.cartlist[0].cartInfoList.forEach(item=>{
+        item.isChecked = isChecked
+      })
+    }
+
+
+
   },
 };
 </script>

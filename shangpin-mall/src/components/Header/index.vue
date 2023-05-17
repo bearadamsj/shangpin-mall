@@ -6,16 +6,22 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <p v-if="!userinfo.name">
             <span>请</span>
             <!-- 申明式 -->
             <router-link to="/login">登录</router-link>
             <router-link to="register" class="register">免费注册</router-link>
           </p>
+          <p v-else>
+            <a>{{ userinfo.name }}</a>
+            <a class="register" @click="logout">log out</a>
+          </p>
         </div>
         <div class="typeList">
-          <a href="###">我的订单</a>
-          <a href="###">我的购物车</a>
+          <router-link to="/center/myOrder">My orders</router-link>
+          <!-- <a href="###">我的购物车</a> -->
+          <router-link to="/shopcart">My shopcart</router-link>
+
           <a href="###">我的尚品汇</a>
           <a href="###">尚品汇会员</a>
           <a href="###">企业采购</a>
@@ -54,6 +60,7 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from "vuex";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Header",
@@ -62,6 +69,13 @@ export default {
       keyword: "",
     };
   },
+
+  computed: {
+    ...mapState({
+      userinfo: (state) => state.user.userinfo,
+    }),
+  },
+
   methods: {
     goSearch() {
       // this.$router.push({
@@ -82,13 +96,22 @@ export default {
       }
       this.$router.push(location);
     },
+
+    async logout() {
+      try {
+        await this.$store.dispatch("logoutAction");
+        this.$router.push("/home");
+      } catch (error) {
+        alert(error.message);
+      }
+    },
   },
 
-  mounted(){
-    this.$bus.$on('clearKeyord',() => {
-      this.keyword = '';
-    })
-  }
+  mounted() {
+    this.$bus.$on("clearKeyord", () => {
+      this.keyword = "";
+    });
+  },
 };
 </script>
 

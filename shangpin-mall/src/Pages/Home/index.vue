@@ -40,13 +40,14 @@ export default {
     },
 
     mounted(){
-        this.$store.dispatch('getFloorList')
+        this.$store.dispatch('getFloorList'),
+        this.$store.dispatch('autoLoginAction')
         
     },
 
     computed: {
         ...mapState({
-            floorlist: (state) => state.home.floorlist
+            floorlist: (state) => state.home.floorlist,
         })
     }
 
